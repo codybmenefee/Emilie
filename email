@@ -1,0 +1,426 @@
+function sendEmails() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var dataSheet = ss.getSheetByName('STUDENTS'); 
+  var dataRange = dataSheet.getRange('dataRange'); 
+  var templateSheet = ss.getSheetByName('Emails'); // Gets Email Template Sheet
+  
+  
+ 
+  
+  // Fetch First Name
+  var firstNameData = dataSheet.getRange('firstNames').getValues();
+  // Fetch Emails
+  var emailData = dataSheet.getRange('emails').getValues();
+  // Fetch Stages
+  var stageData = dataSheet.getRange('stages').getValues();
+  // Fetch Date Last Emailed
+  var emailDateData = dataSheet.getRange('emailDates').getValues();
+  // Fetch Notes
+  var noteData = dataSheet.getRange('notes').getValues();
+  //Fetch ECD
+  var ecfData = dataSheet.getRange('ECF').getValues();
+  //Fetch IDs
+  var idData = dataSheet.getRange('IDs').getValues();
+  
+  
+  
+  // Create one JavaScript object per row of data.
+  var objects = getRowsData(dataSheet, dataRange);
+  
+  
+  // Fetch Date Data
+  var today = new Date();
+  var MILLIS_PER_DAY = 1000*60*60*24;
+  var oneWeek = new Date(today.getTime() - 8 * MILLIS_PER_DAY).getDate();
+  var newDate = new Date();
+  var fourDays = new Date(today.getTime() - 4 * MILLIS_PER_DAY).getDate();
+
+  var trackSS = SpreadsheetApp.openById('14mDfGQ_Za2ilSeCBivJGK18hhojsvO31I0Dy8u5XHbA');
+  var trackSheet = trackSS.insertSheet(
+  Utilities.formatDate(today, "EST",'MM/dd/YYYY').toString()
+  );
+  
+  
+  // For every row object, create a personalized email from a template and send
+  // it to the appropriate person.
+  for (var i = 0; i < objects.length; ++i) {
+    // Get a row object
+    var rowData = objects[i];
+    
+    
+    
+    
+    //Establish object row data
+    var firstName = firstNameData[i]; // No longer needed
+    var email = emailData[i]; // No longer needed
+    var date = new Date(emailDateData[i]).getDate(); // Fetch Date in object row
+    var changedate = new Date(emailDateData[i]);// No longer needed
+    var stage = stageData[i];// Fetch Stage Data
+    var notes = noteData[i];//Fetch Note data
+    var ECF = ecfData[i];// Fetch ECF data
+    var IDs = idData[i].toString();// Fetch ID data
+    Logger.log(IDs);
+    // Fetch column that dates are held in
+    var c = dataSheet.getRange('emailDates').getColumn();
+    
+    
+    
+    // If email is blank - skip.
+    if(email == ""){
+      continue;} 
+    
+     if(rowData.emailAddress == ""){
+      continue;} 
+    
+    
+           // Email Applicants after 4 days
+    if(date == fourDays && stage == '1 Applicant' && notes != 'Last Piece' && notes != 'Ready For Review'){
+      //Logger.log(rowData);
+      
+      var emailTemplate = HtmlService.createTemplateFromFile('Missing_Pieces').evaluate().getContent();
+      //Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Still need few doucments.";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      //Logger.log(emailText);
+      
+      MailApp.sendEmail({
+        to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                      );
+      
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+      
+    }
+           // 8 Day saftey for Applicants
+     if(date == oneWeek && stage == '1 Applicant' && notes != 'Last Piece' && notes != 'Ready For Review'){
+      //Logger.log(rowData);
+      
+      var emailTemplate = HtmlService.createTemplateFromFile('Missing_Pieces').evaluate().getContent();
+      //Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Still need few doucments.";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      //Logger.log(emailText);
+      
+      MailApp.sendEmail({
+        to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                      );
+      
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+      
+    }
+    
+    
+          // Email Applicants (LP) after 4 days
+    if(date == fourDays && stage == '1 Applicant' && notes == 'Last Piece'){
+      //Logger.log(rowData);
+       
+      var emailTemplate = HtmlService.createTemplateFromFile('Last_Piece').evaluate().getContent();
+      //Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Your application is almost complete!";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      //Logger.log(emailText);
+    
+      MailApp.sendEmail({
+        to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                       );
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+    }
+    
+         // 8 day saftey for applicants (LP)
+   if(date == oneWeek && stage == '1 Applicant' && notes == 'Last Piece'){
+      //Logger.log(rowData);
+       
+      var emailTemplate = HtmlService.createTemplateFromFile('Last_Piece').evaluate().getContent();
+      //Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Your application is almost complete!";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      //Logger.log(emailText);
+    
+      MailApp.sendEmail({
+        to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                       );
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+    }
+    
+    
+    
+    
+    // Send Missing ECD Emails to Accepted Students (4 days)
+    if(date == fourDays && stage == '3 Accepted'){
+      
+      var emailTemplate = HtmlService.createTemplateFromFile('Missing_ECD').evaluate().getContent();
+      //Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Enrollment Confirmation Deposit.";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      //Logger.log(emailText);
+    
+      MailApp.sendEmail({ to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                       );
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+    }
+    
+    
+    
+     // Send Missing ECD Emails to Accepted Students (8 day saftey)
+    if(date == oneWeek && stage == '3 Accepted'){
+      
+      var emailTemplate = HtmlService.createTemplateFromFile('Missing_ECD').evaluate().getContent();
+      //Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Enrollment Confirmation Deposit.";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      //Logger.log(emailText);
+    
+      MailApp.sendEmail({
+        to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                       );
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+    }
+      
+    
+    
+    
+    // Send Missing ECF emails to Deposit Incomplete Students (4 days)
+    if(date == fourDays && stage == '4 Deposited Incomplete' && ECF == 'false'){
+      Logger.log(firstName);
+      
+      var emailTemplate = HtmlService.createTemplateFromFile('Missing_ECF').evaluate().getContent();
+      Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Enrollment Confirmation Form.";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      Logger.log(emailText);
+    
+      MailApp.sendEmail({
+        to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                       );
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+    }
+    
+    
+      // Send Missing ECF emails to Deposit Incomplete Students (8 day Saftey)
+    if(date == oneWeek && stage == '4 Deposited Incomplete' && ECF == 'false'){
+      Logger.log(firstName);
+      
+      var emailTemplate = HtmlService.createTemplateFromFile('Missing_ECF').evaluate().getContent();
+      Logger.log(emailTemplate);
+      var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      var emailSubject = "Enrollment Confirmation Form.";
+      var html = HtmlService.createHtmlOutput(emailText).getContent();
+      Logger.log(emailText);
+    
+      MailApp.sendEmail({
+        to:rowData.emailAddress, 
+        subject:emailSubject,
+        htmlBody:html}
+                       );
+      dataRange.getCell(i+1,c).setValue(newDate);
+      trackSheet.appendRow([IDs,emailSubject]);
+    }
+    
+    
+    
+    // Send Deposit Complete Emails
+    //if(date == oneWeek && stage == '5 Deposited Complete'){
+      
+      //var templateSheet = ss.getSheets()[1];
+      //var emailTemplate = templateSheet.getRange("D2").getValue();  
+      //var emailText = fillInTemplateFromObject(emailTemplate, rowData);
+      //var emailSubject = "Tutorial: Simple Mail Merge";
+    
+   //MailApp.sendEmail(rowData.emailAddress, emailSubject, emailText);
+      //dataRange.getCell(i+1,c).setValue(newDate);}
+    //trackSheet.appendRow([IDs,emailSubject]);
+      
+    
+  }
+}
+
+
+
+
+
+// The following code has been copied from StackOverflow (I unfortunately do not remember the user info)
+
+
+// Replaces markers in a template string with values define in a JavaScript data object.
+// Arguments:
+//   - template: string containing markers, for instance ${"Column name"}
+//   - data: JavaScript object with values to that will replace markers. For instance
+//           data.columnName will replace marker ${"Column name"}
+// Returns a string without markers. If no data is found to replace a marker, it is
+// simply removed.
+function fillInTemplateFromObject(template, data) {
+  var email = template;
+  // Search for all the variables to be replaced, for instance ${"Column name"}
+  var templateVars = template.match(/\$\{\"[^\"]+\"\}/g);
+
+  // Replace variables from the template with the actual values from the data object.
+  // If no value is available, replace with the empty string.
+  for (var i = 0; i < templateVars.length; ++i) {
+    // normalizeHeader ignores ${"} so we can call it directly here.
+    var variableData = data[normalizeHeader(templateVars[i])];
+    email = email.replace(templateVars[i], variableData || "");
+  }
+
+  return email;
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// The code below is reused from the 'Reading Spreadsheet data using JavaScript Objects'
+// tutorial.
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// getRowsData iterates row by row in the input range and returns an array of objects.
+// Each object contains all the data for a given row, indexed by its normalized column name.
+// Arguments:
+//   - sheet: the sheet object that contains the data to be processed
+//   - range: the exact range of cells where the data is stored
+//   - columnHeadersRowIndex: specifies the row number where the column names are stored.
+//       This argument is optional and it defaults to the row immediately above range; 
+// Returns an Array of objects.
+function getRowsData(sheet, range, columnHeadersRowIndex) {
+  columnHeadersRowIndex = columnHeadersRowIndex || range.getRowIndex() - 1;
+  var numColumns = range.getEndColumn() - range.getColumn() + 1;
+  var headersRange = sheet.getRange(columnHeadersRowIndex, range.getColumn(), 1, numColumns);
+  var headers = headersRange.getValues()[0];
+  return getObjects(range.getValues(), normalizeHeaders(headers));
+}
+
+// For every row of data in data, generates an object that contains the data. Names of
+// object fields are defined in keys.
+// Arguments:
+//   - data: JavaScript 2d array
+//   - keys: Array of Strings that define the property names for the objects to create
+function getObjects(data, keys) {
+  var objects = [];
+  for (var i = 0; i < data.length; ++i) {
+    var object = {};
+    var hasData = false;
+    for (var j = 0; j < data[i].length; ++j) {
+      var cellData = data[i][j];
+      if (isCellEmpty(cellData)) {
+        continue;
+      }
+      object[keys[j]] = cellData;
+      hasData = true;
+    }
+    if (hasData) {
+      objects.push(object);
+    }
+  }
+  return objects;
+}
+
+// Returns an Array of normalized Strings.
+// Arguments:
+//   - headers: Array of Strings to normalize
+function normalizeHeaders(headers) {
+  var keys = [];
+  for (var i = 0; i < headers.length; ++i) {
+    var key = normalizeHeader(headers[i]);
+    if (key.length > 0) {
+      keys.push(key);
+    }
+  }
+  return keys;
+}
+
+// Normalizes a string, by removing all alphanumeric characters and using mixed case
+// to separate words. The output will always start with a lower case letter.
+// This function is designed to produce JavaScript object property names.
+// Arguments:
+//   - header: string to normalize
+// Examples:
+//   "First Name" -> "firstName"
+//   "Market Cap (millions) -> "marketCapMillions
+//   "1 number at the beginning is ignored" -> "numberAtTheBeginningIsIgnored"
+function normalizeHeader(header) {
+  var key = "";
+  var upperCase = false;
+  for (var i = 0; i < header.length; ++i) {
+    var letter = header[i];
+    if (letter == " " && key.length > 0) {
+      upperCase = true;
+      continue;
+    }
+    if (!isAlnum(letter)) {
+      continue;
+    }
+    if (key.length == 0 && isDigit(letter)) {
+      continue; // first character must be a letter
+    }
+    if (upperCase) {
+      upperCase = false;
+      key += letter.toUpperCase();
+    } else {
+      key += letter.toLowerCase();
+    }
+  }
+  return key;
+}
+
+// Returns true if the cell where cellData was read from is empty.
+// Arguments:
+//   - cellData: string
+function isCellEmpty(cellData) {
+  return typeof(cellData) == "string" && cellData == "";
+}
+
+// Returns true if the character char is alphabetical, false otherwise.
+function isAlnum(char) {
+  return char >= 'A' && char <= 'Z' ||
+    char >= 'a' && char <= 'z' ||
+    isDigit(char);
+}
+
+// Returns true if the character char is a digit, false otherwise.
+function isDigit(char) {
+  return char >= '0' && char <= '9';
+}
+
+function getEmail(){
+  
+  // Get the first message in the first thread of your inbox
+var message = GmailApp.getInboxThreads(0, 1)[0].getMessages()[0];
+// Get its ID
+var messageId = message.getId();
+// Now fetch the same message using that ID.
+var messageById = GmailApp.getMessageById(messageId);
+// Should always log true as they should be the same message
+ var messageBody = message.getBody();
+ 
+  Logger.log(messageBody);
+Logger.log(message.getSubject() == messageById.getSubject());
+}
