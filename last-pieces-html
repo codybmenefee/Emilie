@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  <style media="screen">
+
+    #container{
+      width:600px;
+      margin:auto;
+        }
+
+    #body{
+      padding-top:25px;
+      padding-left:5%;
+      color:#323232;
+      font-family: Helvetica;
+      font-size: 115%;
+      font-weight:150;
+      line-height:25px;
+    }
+
+    #seulogo{
+      width:100%;
+    }
+
+    #info{
+        border-bottom:1px solid;
+    }
+
+    #dis{
+      font-size:60%;
+    }
+
+    #link{
+      text-align:center;
+      margin-left:35%;
+      background-color:#e44444;
+      border-radius: 5px;
+      padding:10px;
+      width:100px;
+    }
+
+  </style>
+  </head>
+  <body>
+  <div id="container">
+    <img id="seulogo" src="https://ci3.googleusercontent.com/proxy/K8jPjmvVS16bIYbRVqjyxS1rMsSuj9SPNtqxBHyoPzAKw2-PukhWjoRE4c2LAtVM_yKo6ZjsDGPoj_V009CoMCA7UEXx2cGlwccAHfhl4jfrhUFKsDk=s0-d-e1-ft#https://publicate.it/img/600x0x9/f/S3B/unnamed-t749397-20000.jpg
+          " alt="SEU_Flame_Logo">
+
+   <div id="body">
+     Hey ${"First"},
+     <br>
+     <br>
+    You are down to just one more document left before your application is complete and your file is ready for review! You are <strong>SO</strong> close! The only thing left to turn in is your:
+    <strong>${"LP ESSAY"} ${"LP CCR"} ${"LP TS"} ${"LP TRANS"}.</strong>
+
+      <p> Let me know if there is anything I can do to help you submit this last piece!</p>
+        <div id="sig">
+          <br>
+          <br><br>
+          <span style=text-decoration:underline;>Cody Menefee <span style=color:red;>|</span>
+          Central Florida Enrollment Counselor</span>
+          <br>
+          <span style=color:red;>E:</span> cmenefee@seu.edu <br>
+          <span style=color:red;>O:</span> 863-667-5772 <br>
+          <span style=color:red;>T:</span> 864-209-7981 <br>
+          <br>
+          If you'd like to set up either phone call or face-to-face meeting you can do so
+          <a href="www.calendly.com/cmenefee" style=text-decoration:underline;color:red;border:none; >
+            here</a>! :)
+        </div>
+     </div>
+    </div>
+  </body>
+</html>
