@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  <style media="screen">
+
+    #container{
+      width:600px;
+      margin:auto;
+        }
+
+    #body{
+      padding-left:5%;
+      color:#323232;
+      font-family: Helvetica;
+      font-size: 115%;
+      font-weight:105;
+      line-height:25px;
+    }
+
+    #seulogo{
+      width:100%;
+    }
+
+    #info{
+        border-bottom:1px solid;
+    }
+
+    #dis{
+      font-size:60%;
+    }
+
+  </style>
+  </head>
+  <body>
+  <div id="container">
+    <img id="seulogo" src="https://ci3.googleusercontent.com/proxy/K8jPjmvVS16bIYbRVqjyxS1rMsSuj9SPNtqxBHyoPzAKw2-PukhWjoRE4c2LAtVM_yKo6ZjsDGPoj_V009CoMCA7UEXx2cGlwccAHfhl4jfrhUFKsDk=s0-d-e1-ft#https://publicate.it/img/600x0x9/f/S3B/unnamed-t749397-20000.jpg
+          " alt="SEU_Flame_Logo">
+
+   <div id="body">
+     <p>
+       Hey ${"First"},
+       <br>
+       <br>
+     I hope you are doing well! It appears that your application is still
+     incomplete. Below is a list of what documents are required for your
+     application to SEU. If an item is marked "RECEIVED", then I have the document.
+     If it is marked "NOT RECEIVED" then I do not have the document.
+     As soon as you are able to submit these documents, we will be able to review
+     your file for acceptance to <strong> SEU! :) </strong>
+     </p>
+    <div id="info">
+      <ul>
+        <li>Biographical essay - <strong class="info">${"ESSAY EMAIL"}</strong></li>
+        <li>Christian Character Reference - <strong class="info">${"CCR EMAIL"}</strong></li>
+        <li>ACT or SAT Transcripts - <strong class="info">${"TS EMAIL"}</strong></li>
+        <li>Highschool Transcripts - <strong class="info">${"TRANS EMAIL"}</strong></li>
+        </ul>
+        <br>
+        <p id="dis">
+        <strong>**Disclaimer - if you submitted a document within the last 48 hours, it may still be in processing**</strong>
+        </p>
+      </div>
+      <h3>
+        Helpful instructions:<br>
+      </h3>
+      <strong>Essay</strong> - Simply type this and email it to me.<br>
+      <strong>CCR</strong> - This is not a letter of reference. Have your reference fill
+      out our form at <a href="https://www.seu.edu/ccr/" style=text-decoration:underline;color:#323232;border:none;>seu.edu/ccr</a>.<br>
+      <strong>Test Scores</strong> - You can either download a PDF of your scores or take a screenshot of them
+      and email them to me.<br>
+      <strong>Transcripts</strong> - Either have your guidance counsleor email these to me or <span style=text-decoration:none;color:#323232;border:none;>Admission@seu.edu</span>, or mail them to SEU.
+      <br>
+      <br>
+
+      <p> If you need help or have any questions, don't hesitate to reach out!</p>
+      <div id="sig">
+        <br>
+        <br>
+        <span style=text-decoration:underline;>Cody Menefee <span style=color:red;>|</span>
+        Central Florida Enrollment Counselor</span>
+        <br>
+        <span style=color:red;>E:</span> cmenefee@seu.edu <br>
+        <span style=color:red;>O:</span> 863-667-5772 <br>
+        <span style=color:red;>T:</span> 864-209-7981 <br>
+        <br>
+        If you'd like to set up either phone call or face-to-face meeting you can do so
+        <a href="www.calendly.com/cmenefee" style=text-decoration:underline;color:red;border:none; >
+          here</a>! :)
+      </div>
+     </div>
+    </div>
+  </body>
+</html>
